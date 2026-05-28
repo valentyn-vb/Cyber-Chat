@@ -12,9 +12,9 @@ export class ThreadsController {
   }
 
   @Get(':id')
-    private getThreadById(@Param('id') id: string){
-        this.threadsService.
-    }
+  private getThreadById(@Param('id') id: string) {
+    return this.threadsService.getThreadById(id);
+  }
 
   @Post()
   private createThread(@Body() threadPayload: ThreadPayload) {

@@ -19,5 +19,7 @@ export class ThreadsService {
     if (!thread) {
       throw new NotFoundException(`No thread with such id: ${id}`);
     }
+
+    return thread;
   }
 }

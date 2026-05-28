@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ThreadsRepositoryService } from './threads-repository.service';
+import { ThreadsRepository } from './threads-repository.service';
 
-describe('ThreadsRepositoryService', () => {
-  let service: ThreadsRepositoryService;
+describe('ThreadsRepository', () => {
+  let service: ThreadsRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ThreadsRepositoryService],
+      providers: [ThreadsRepository],
     }).compile();
 
-    service = module.get<ThreadsRepositoryService>(ThreadsRepositoryService);
+    service = module.get<ThreadsRepository>(ThreadsRepository);
   });
 
   it('should be defined', () => {

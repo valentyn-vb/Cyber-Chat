@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThreadsRepository } from './threads-repository.service';
 import { ThreadsService } from './threads.service';
 
 describe('ThreadsService', () => {
@@ -6,7 +7,7 @@ describe('ThreadsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ThreadsService],
+      providers: [ThreadsService, ThreadsRepository],
     }).compile();
 
     service = module.get<ThreadsService>(ThreadsService);

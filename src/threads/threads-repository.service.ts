@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Thread } from 'src/comments/entities/models/comment';
+import { Thread } from './models/thread';
 
 @Injectable()
 export class ThreadsRepository {
