@@ -24,8 +24,10 @@ export class ThreadsService {
     return plainToInstance(ThreadResponseDto, threads);
   }
 
-  public createNewThread(thread: CreateThreadDto) {
-    return this.threads.save(thread);
+  public async createNewThread(thread: CreateThreadDto) {
+    const savedThread = await this.threads.save(thread);
+
+    return plainToInstance(ThreadResponseDto, savedThread);
   }
 
   public async updateThread(id: string, thread: UpdateThreadDto) {
@@ -35,7 +37,7 @@ export class ThreadsService {
       throw new NotFoundException(`No thread with such id: ${id}`);
     }
 
-    return updatedThread;
+    return this.getThreadById(id);
   }
 
   public async getThreadById(id: string) {
@@ -43,7 +45,7 @@ export class ThreadsService {
     if (!thread) {
       throw new NotFoundException(`No thread with such id: ${id}`);
     }
-   
+
     return plainToInstance(ThreadResponseDto, thread);
   }
 

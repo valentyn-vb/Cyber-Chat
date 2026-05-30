@@ -3,13 +3,19 @@ import { CommentResponseDto } from '../../comments/dto/comment-response-dto';
 
 export class ThreadResponseDto {
   @Expose()
-  title;
+  id: string;
 
   @Expose()
-  author;
+  title: string;
 
   @Expose()
-  body;
+  author: string;
+
+  @Expose()
+  body: string;
+
+  @Expose()
+  createdAt: Date;
 
   @Expose()
   @Type(() => CommentResponseDto)

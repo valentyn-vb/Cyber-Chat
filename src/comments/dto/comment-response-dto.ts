@@ -1,4 +1,5 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { ThreadSummaryResponseDto } from '../../threads/dto/thread-summary-response-dto';
 
 export class CommentResponseDto {
   @Expose()
@@ -11,5 +12,10 @@ export class CommentResponseDto {
   body: string;
 
   @Expose()
+  @Type(() => Date)
   createdAt: Date;
+
+  @Expose()
+  @Type(() => ThreadSummaryResponseDto)
+  thread: ThreadSummaryResponseDto;
 }

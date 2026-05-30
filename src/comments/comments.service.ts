@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
+import { CommentResponseDto } from './dto/comment-response-dto';
 import { CreateCommentDto } from './dto/create-commnet-dto';
 import { Comment } from './entities/comment.entity';
 
@@ -10,8 +12,8 @@ export class CommentsService {
     @InjectRepository(Comment) private readonly comments: Repository<Comment>,
   ) {}
 
-  public getAll() {
-    return this.comments.find({
+  public async getAll() {
+    const comments = await this.comments.find({
       order: {
         createdAt: 'ASC',
       },
@@ -19,6 +21,8 @@ export class CommentsService {
         thread: true,
       },
     });
+
+    return plainToInstance(CommentResponseDto, comments);
   }
 
   public async getById(id: string) {
@@ -32,20 +36,17 @@ export class CommentsService {
       throw new NotFoundException(`No comment with such id: ${id}`);
     }
 
-    return comment;
+    return plainToInstance(CommentResponseDto, comment);
   }
 
-  public createNewComment(threadId: string, dto: CreateCommentDto) {
-    console.log('🚀 ~ CommentsService ~ createNewComment ~ dto:', dto);
-    console.log(
-      '🚀 ~ CommentsService ~ createNewComment ~ threadId:',
-      threadId,
-    );
+  public async createNewComment(threadId: string, dto: CreateCommentDto) {
     const comment = this.comments.create({
       thread: { id: threadId },
       ...dto,
     });
-    return this.comments.save(comment);
+    const savedComment = await this.comments.save(comment);
+
+    return this.getById(savedComment.id);
   }
 
   public async deleteById(id: string) {
