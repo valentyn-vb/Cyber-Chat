@@ -15,11 +15,19 @@ export class CommentsService {
       order: {
         createdAt: 'ASC',
       },
+      relations: {
+        thread: true,
+      },
     });
   }
 
   public async getById(id: string) {
-    const comment = await this.comments.findOneBy({ id });
+    const comment = await this.comments.findOne({
+      where: { id },
+      relations: {
+        thread: true,
+      },
+    });
     if (!comment) {
       throw new NotFoundException(`No comment with such id: ${id}`);
     }

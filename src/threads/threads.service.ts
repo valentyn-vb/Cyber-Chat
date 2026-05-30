@@ -37,6 +37,9 @@ export class ThreadsService {
   }
 
   private async findThreadById(id: string) {
-    return this.threads.findOneBy({ id });
+    return this.threads.findOne({
+      where: { id },
+      relations: { comments: true },
+    });
   }
 }
