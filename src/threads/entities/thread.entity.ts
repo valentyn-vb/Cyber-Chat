@@ -24,6 +24,9 @@ export class Thread {
   @Column('text')
   body!: string;
 
+  @Column({ nullable: true })
+  newOldUnneededColumn!: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 }

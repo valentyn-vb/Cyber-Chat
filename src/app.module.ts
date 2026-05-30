@@ -15,7 +15,7 @@ import { ThreadsModule } from './threads/threads.module';
       type: 'better-sqlite3',
       database: '../db/chat.sqlite',
       entities: [Thread, Comment],
-      synchronize: true,
+      synchronize: false,
       logging: true,
       enableWAL: true,
       statementCacheSize: 100,
