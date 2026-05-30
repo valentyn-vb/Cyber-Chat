@@ -8,8 +8,8 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { CommentsService } from 'src/comments/comments.service';
-import { CreateCommentDto } from 'src/comments/dto/create-commnet-dto';
+import { CommentsService } from '../comments/comments.service';
+import { CreateCommentDto } from '../comments/dto/create-commnet-dto';
 import { type ThreadPayload } from './models/thread';
 import { ThreadsService } from './threads.service';
 

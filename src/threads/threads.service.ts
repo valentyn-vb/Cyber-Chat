@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateCommentDto } from 'src/comments/dto/create-commnet-dto';
 import { Repository } from 'typeorm';
 import { Thread } from './entities/thread.entity';
 import { ThreadPayload } from './models/thread';
@@ -35,8 +34,6 @@ export class ThreadsService {
     if (!res.affected) {
       throw new NotFoundException(`No thread with such id: ${id}`);
     }
-    console.log('🚀 ~ ThreadsService ~ deleteThread ~ res:', res);
-    return res.raw;
   }
 
   private async findThreadById(id: string) {

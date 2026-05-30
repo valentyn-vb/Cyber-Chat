@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ThreadsRepository } from './threads-repository.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { CommentsService } from '../comments/comments.service';
+import { Thread } from './entities/thread.entity';
 import { ThreadsController } from './threads.controller';
 import { ThreadsService } from './threads.service';
 
@@ -9,7 +11,24 @@ describe('ThreadsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ThreadsController],
-      providers: [ThreadsService, ThreadsRepository],
+      providers: [
+        ThreadsService,
+        {
+          provide: CommentsService,
+          useValue: {
+            createNewComment: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(Thread),
+          useValue: {
+            find: jest.fn(),
+            findOneBy: jest.fn(),
+            save: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<ThreadsController>(ThreadsController);

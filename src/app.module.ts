@@ -3,8 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommentsModule } from './comments/comments.module';
-import { Thread } from './threads/entities/thread.entity';
 import { ThreadsModule } from './threads/threads.module';
+import { Comment } from './comments/entities/comment.entity';
+import { Thread } from './threads/entities/thread.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { ThreadsModule } from './threads/threads.module';
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
       database: '../db/chat.sqlite',
-      entities: [Thread],
+      entities: [Thread, Comment],
       synchronize: true,
       logging: true,
       enableWAL: true,
