@@ -6,4 +6,4 @@ export type Thread = {
   createdAt: Date;
 };
 
-export type ThreadPayload = Omit<Thread, 'id'>;
+export type ThreadPayload = Omit<Thread, 'id' | 'createdAt'>;

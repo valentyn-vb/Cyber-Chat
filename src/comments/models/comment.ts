@@ -1,6 +1,6 @@
-export type Thread = {
+export type Comment = {
   id: number;
-  title: string;
+  threadId: number;
   author: string;
   body: string;
   createdAt: Date;
