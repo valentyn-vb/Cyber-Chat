@@ -5,5 +5,3 @@ export type Thread = {
   body: string;
   createdAt: Date;
 };
-
-export type ThreadPayload = Omit<Thread, 'id' | 'createdAt'>;

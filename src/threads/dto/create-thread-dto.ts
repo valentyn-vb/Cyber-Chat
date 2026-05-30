@@ -6,7 +6,7 @@ export class CreateThreadDto {
   @MaxLength(200)
   title!: string;
 
-  @sString()
+  @IsString()
   @IsNotEmpty()
   @MaxLength(120)
   author!: string;

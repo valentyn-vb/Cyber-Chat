@@ -1,23 +1,41 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
+import { CreateThreadDto } from './dto/create-thread-dto';
+import { ThreadResponseDto } from './dto/thread-response-dto';
+import { UpdateThreadDto } from './dto/update-thread-dto';
 import { Thread } from './entities/thread.entity';
-import { ThreadPayload } from './models/thread';
 
 @Injectable()
 export class ThreadsService {
   constructor(@InjectRepository(Thread) private threads: Repository<Thread>) {}
 
-  public getAllThreads() {
-    return this.threads.find({
+  public async getAllThreads() {
+    const threads = await this.threads.find({
+      relations: {
+        comments: true,
+      },
       order: {
         createdAt: 'ASC',
       },
     });
+
+    return plainToInstance(ThreadResponseDto, threads);
   }
 
-  public createNewThread(thread: ThreadPayload) {
+  public createNewThread(thread: CreateThreadDto) {
     return this.threads.save(thread);
+  }
+
+  public async updateThread(id: string, thread: UpdateThreadDto) {
+    const updatedThread = await this.threads.update(id, thread);
+
+    if (!updatedThread) {
+      throw new NotFoundException(`No thread with such id: ${id}`);
+    }
+
+    return updatedThread;
   }
 
   public async getThreadById(id: string) {
@@ -25,8 +43,8 @@ export class ThreadsService {
     if (!thread) {
       throw new NotFoundException(`No thread with such id: ${id}`);
     }
-
-    return thread;
+   
+    return plainToInstance(ThreadResponseDto, thread);
   }
 
   public async deleteThread(id: string) {

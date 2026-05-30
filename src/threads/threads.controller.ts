@@ -6,11 +6,14 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { CommentsService } from '../comments/comments.service';
 import { CreateCommentDto } from '../comments/dto/create-commnet-dto';
-import { type ThreadPayload } from './models/thread';
+import { CreateThreadDto } from './dto/create-thread-dto';
+import { UpdateThreadDto } from './dto/update-thread-dto';
 import { ThreadsService } from './threads.service';
 
 @Controller('threads')
@@ -31,17 +34,20 @@ export class ThreadsController {
   }
 
   @Post()
-  private createThread(@Body() threadPayload: ThreadPayload) {
-    console.log(
-      '🚀 ~ ThreadsController ~ createThread ~ threadPayload:',
-      threadPayload,
-    );
+  private createThread(@Body() threadPayload: CreateThreadDto) {
     return this.threadsService.createNewThread(threadPayload);
+  }
+
+  @Patch(':id')
+  private updateThread(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() threadPayload: UpdateThreadDto,
+  ) {
+    return this.threadsService.updateThread(id, threadPayload);
   }
 
   @Post(':id/comments')
   createThreadComment(@Param('id') id: string, @Body() dto: CreateCommentDto) {
-    console.log('🚀 ~ ThreadsController ~ createThreadComment ~ dto:', dto);
     return this.commentsService.createNewComment(id, dto);
   }
 
