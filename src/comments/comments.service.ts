@@ -10,6 +10,14 @@ export class CommentsService {
     @InjectRepository(Comment) private readonly comments: Repository<Comment>,
   ) {}
 
+  public getAll() {
+    return this.comments.find({
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+  }
+
   public async getById(id: string) {
     const comment = await this.comments.findOneBy({ id });
     if (!comment) {
@@ -20,6 +28,11 @@ export class CommentsService {
   }
 
   public createNewComment(threadId: string, dto: CreateCommentDto) {
+    console.log('🚀 ~ CommentsService ~ createNewComment ~ dto:', dto);
+    console.log(
+      '🚀 ~ CommentsService ~ createNewComment ~ threadId:',
+      threadId,
+    );
     const comment = this.comments.create({
       thread: { id: threadId },
       ...dto,
