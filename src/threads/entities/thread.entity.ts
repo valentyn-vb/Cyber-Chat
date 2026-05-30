@@ -1,4 +1,3 @@
-import { Comment } from 'src/comments/entities/comment.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity('threads')
 export class Thread {
@@ -23,9 +23,6 @@ export class Thread {
 
   @Column('text')
   body!: string;
-
-  @Column('text')
-  notNeedField!: string;
 
   @CreateDateColumn()
   createdAt!: Date;
