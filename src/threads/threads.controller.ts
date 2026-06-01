@@ -10,13 +10,17 @@ import {
   Patch,
   Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import type { Request as ExpressReq } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CreateCommentDto } from 'src/comments/dto/create-commnet-dto';
+import { PaginationQueryDto } from 'src/shared/pagination-query-dto';
 import { CommentsService } from '../comments/comments.service';
-import { CreateCommentDto } from '../comments/dto/create-commnet-dto';
 import { CreateThreadDto } from './dto/create-thread-dto';
 import { UpdateThreadDto } from './dto/update-thread-dto';
 import { ThreadsService } from './threads.service';
-import { PaginationQueryDto } from 'src/shared/pagination-query-dto';
 
 @Controller('threads')
 export class ThreadsController {
@@ -35,9 +39,14 @@ export class ThreadsController {
     return this.threadsService.getThreadById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  private createThread(@Body() threadPayload: CreateThreadDto) {
-    return this.threadsService.createNewThread(threadPayload);
+  private createThread(
+    @Body() threadPayload: CreateThreadDto,
+    @Request() req: ExpressReq,
+  ) {
+    console.log('🚀 ~ ThreadsController ~ createThread ~ req:', req);
+    return;
   }
 
   @Patch(':id')
