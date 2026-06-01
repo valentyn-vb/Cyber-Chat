@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 
 @Controller('comments')
@@ -11,7 +11,7 @@ export class CommentsController {
   }
 
   @Get(':id')
-  getCommentById(@Param('id') id: string) {
+  getCommentById(@Param('id', ParseUUIDPipe) id: string) {
     return this.commentsService.getById(id);
   }
 }

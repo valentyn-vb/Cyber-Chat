@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
+import { PaginationQueryDto } from '../shared/pagination-query-dto';
 import { CreateThreadDto } from './dto/create-thread-dto';
 import { ThreadResponseDto } from './dto/thread-response-dto';
 import { UpdateThreadDto } from './dto/update-thread-dto';
@@ -11,17 +12,39 @@ import { Thread } from './entities/thread.entity';
 export class ThreadsService {
   constructor(@InjectRepository(Thread) private threads: Repository<Thread>) {}
 
-  public async getAllThreads() {
-    const threads = await this.threads.find({
+  public async getAllThreads(pagination: PaginationQueryDto) {
+    const { page, limit } = pagination;
+    const [threads, totalItems] = await this.threads.findAndCount({
       relations: {
         comments: true,
       },
       order: {
         createdAt: 'ASC',
       },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+    console.log(
+      '🚀 ~ ThreadsService ~ getAllThreads ~ totalItems:',
+      totalItems,
+    );
+    console.log('🚀 ~ ThreadsService ~ getAllThreads ~ threads:', threads);
 
-    return plainToInstance(ThreadResponseDto, threads);
+    const responseThreads: ThreadResponseDto[] = plainToInstance(
+      ThreadResponseDto,
+      threads,
+    );
+
+    return {
+      data: responseThreads,
+      meta: {
+        totalItems,
+        itemCount: responseThreads.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+      },
+    };
   }
 
   public async createNewThread(thread: CreateThreadDto) {

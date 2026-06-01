@@ -9,12 +9,14 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CommentsService } from '../comments/comments.service';
 import { CreateCommentDto } from '../comments/dto/create-commnet-dto';
 import { CreateThreadDto } from './dto/create-thread-dto';
 import { UpdateThreadDto } from './dto/update-thread-dto';
 import { ThreadsService } from './threads.service';
+import { PaginationQueryDto } from 'src/shared/pagination-query-dto';
 
 @Controller('threads')
 export class ThreadsController {
@@ -24,12 +26,12 @@ export class ThreadsController {
   ) {}
 
   @Get('')
-  private getAllThreads() {
-    return this.threadsService.getAllThreads();
+  private getAllThreads(@Query() pagination: PaginationQueryDto) {
+    return this.threadsService.getAllThreads(pagination);
   }
 
   @Get(':id')
-  private getThreadById(@Param('id') id: string) {
+  private getThreadById(@Param('id', ParseUUIDPipe) id: string) {
     return this.threadsService.getThreadById(id);
   }
 
@@ -47,13 +49,16 @@ export class ThreadsController {
   }
 
   @Post(':id/comments')
-  createThreadComment(@Param('id') id: string, @Body() dto: CreateCommentDto) {
+  createThreadComment(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: CreateCommentDto,
+  ) {
     return this.commentsService.createNewComment(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  private deleteThread(@Param('id') id: string) {
+  private deleteThread(@Param('id', ParseUUIDPipe) id: string) {
     return this.threadsService.deleteThread(id);
   }
 }
