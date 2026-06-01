@@ -1,22 +1,27 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/entities/comment.entity';
 import { Thread } from './threads/entities/thread.entity';
 import { ThreadsModule } from './threads/threads.module';
+import { User } from './users/entities/user.entities';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     ThreadsModule,
     CommentsModule,
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
       database: '../db/chat.sqlite',
-      entities: [Thread, Comment],
+      entities: [Thread, Comment, User],
       synchronize: true,
       logging: true,
       enableWAL: true,
