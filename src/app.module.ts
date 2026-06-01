@@ -6,6 +6,8 @@ import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/entities/comment.entity';
 import { Thread } from './threads/entities/thread.entity';
 import { ThreadsModule } from './threads/threads.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ThreadsModule } from './threads/threads.module';
       enableWAL: true,
       statementCacheSize: 100,
     }),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
