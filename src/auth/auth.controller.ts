@@ -1,5 +1,7 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import type { Request as ExpressReq } from 'express';
+import { ResponseUserDto } from 'src/users/dto/response-user-dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-dto';
 import { RegisterDto } from './dto/register-dto';
@@ -10,9 +12,11 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  private login(@Body() loginDto: LoginDto) {
-    console.log('🚀 ~ AuthController ~ login ~ loginDto:', loginDto);
-    return this.authService.validateUser(loginDto.username, loginDto.password);
+  private login(
+    @Body() _loginDto: LoginDto,
+    @Request() req: ExpressReq & { user: ResponseUserDto },
+  ) {
+    return this.authService.login(req.user);
   }
 
   @Post('register')

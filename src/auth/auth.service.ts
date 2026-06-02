@@ -9,11 +9,15 @@ import { plainToInstance } from 'class-transformer';
 import { ResponseUserDto } from 'src/users/dto/response-user-dto';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register-dto';
+import { JwtPayload } from './types/jwt-payload';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
-  public async validateUser(username: string, password: string) {
+  public async validateUser(
+    username: string,
+    password: string,
+  ): Promise<ResponseUserDto | null> {
     const user = await this.usersService.findByUsername(username);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -24,8 +28,17 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const { passwordHash: _, ...result } = user;
-    return plainToInstance(ResponseUserDto, result);
+    return plainToInstance(ResponseUserDto, user);
+  }
+
+  public login(user: ResponseUserDto) {
+    const payload: JwtPayload = {
+      username: user.username,
+      sub: user.id,
+      roles: [],
+    };
+
+    return payload;
   }
 
   public async register(registerDto: RegisterDto) {
@@ -36,7 +49,6 @@ export class AuthService {
       throw new ConflictException('Username is already taken');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return plainToInstance(
       ResponseUserDto,
       await this.usersService.createUser(registerDto),

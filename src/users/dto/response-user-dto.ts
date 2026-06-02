@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 
 export class ResponseUserDto {
   @Expose()
-  id: number;
+  id: string;
   @Expose()
   email: string;
   @Expose()
