@@ -24,11 +24,6 @@ export class ThreadsService {
       skip: (page - 1) * limit,
       take: limit,
     });
-    console.log(
-      '🚀 ~ ThreadsService ~ getAllThreads ~ totalItems:',
-      totalItems,
-    );
-    console.log('🚀 ~ ThreadsService ~ getAllThreads ~ threads:', threads);
 
     const responseThreads: ThreadResponseDto[] = plainToInstance(
       ThreadResponseDto,

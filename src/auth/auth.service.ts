@@ -4,6 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import { ResponseUserDto } from 'src/users/dto/response-user-dto';
@@ -13,7 +14,10 @@ import { JwtPayload } from './types/jwt-payload';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
   public async validateUser(
     username: string,
     password: string,
@@ -38,7 +42,9 @@ export class AuthService {
       roles: [],
     };
 
-    return payload;
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   public async register(registerDto: RegisterDto) {
