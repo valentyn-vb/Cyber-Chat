@@ -39,26 +39,26 @@ export class ThreadsController {
   @Public()
   @Get('')
   @ApiGetThreadsDocs()
-  private getAllThreads(@Query() pagination: PaginationQueryDto) {
+  getAllThreads(@Query() pagination: PaginationQueryDto) {
     return this.threadsService.getAllThreads(pagination);
   }
 
   @Public()
   @Get(':id')
   @ApiGetThreadDocs()
-  private getThreadById(@Param('id', ParseUUIDPipe) id: string) {
+  getThreadById(@Param('id', ParseUUIDPipe) id: string) {
     return this.threadsService.getThreadById(id);
   }
 
   @Post()
   @ApiCreateThreadDocs()
-  private createThread(@Body() threadPayload: CreateThreadDto) {
+  createThread(@Body() threadPayload: CreateThreadDto) {
     return this.threadsService.createNewThread(threadPayload);
   }
 
   @Patch(':id')
   @ApiUpdateThreadDocs()
-  private updateThread(
+  updateThread(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() threadPayload: UpdateThreadDto,
   ) {
@@ -77,7 +77,7 @@ export class ThreadsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiDeleteThreadDocs()
-  private deleteThread(@Param('id', ParseUUIDPipe) id: string) {
+  deleteThread(@Param('id', ParseUUIDPipe) id: string) {
     return this.threadsService.deleteThread(id);
   }
 }
