@@ -23,6 +23,4 @@ export class UsersService {
       passwordHash,
     });
   }
-
-  public validateUser(username: string, password: string) {}
 }
