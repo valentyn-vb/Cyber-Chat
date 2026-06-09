@@ -3,12 +3,16 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
 import { PaginationQueryDto } from 'src/shared/pagination-query-dto';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { CreateThreadDto } from './dto/create-thread-dto';
+import { ThreadResponseDto } from './dto/thread-response-dto';
 import { Thread } from './entities/thread.entity';
 import { ThreadsService } from './threads.service';
 
 const mockThreadsRepository = {
   findAndCount: vi.fn(),
   findOne: vi.fn(),
+  save: vi.fn(),
+  delete: vi.fn(),
 };
 
 describe('ThreadService', () => {
@@ -85,16 +89,64 @@ describe('ThreadService', () => {
   });
 
   it('retrieves thread by id', async () => {
+    const threadId = 'c8926730-bca5-4de5-bb86-98791cdaae0c';
     const threadResponse = {
-      id: 'c8926730-bca5-4de5-bb86-98791cdaae0c',
+      id: threadId,
       title: 'How do I secure a NestJS API?',
+      author: 'Alice',
+      body: 'I am adding JWT auth and want to avoid common mistakes.',
+      createdAt: '2026-06-08T10:30:00.000Z',
+      comments: [],
     };
 
-    mockThreadsRepository.getThreadById.mockRejectedValue(threadResponse);
-    const result = await service.getThreadById(
-      'c8926730-bca5-4de5-bb86-98791cdaae0c',
-    );
+    mockThreadsRepository.findOne.mockResolvedValue(threadResponse);
+    const result = await service.getThreadById(threadId);
 
-    expect(result.id).toBe(threadResponse.id);
+    expect(mockThreadsRepository.findOne).toHaveBeenCalledWith({
+      where: { id: threadId },
+      relations: { comments: true },
+    });
+    expect(result.id).toBe(threadId);
+    expect(result.title).toBe(threadResponse.title);
+  });
+
+  it('throws NotFoundException when thread not found by id', async () => {
+    const threadId = 'non-existent-id';
+    mockThreadsRepository.findOne.mockResolvedValue(null);
+
+    await expect(service.getThreadById(threadId)).rejects.toThrow(
+      `No thread with such id: ${threadId}`,
+    );
+  });
+
+  it('creates a new thread', async () => {
+    const threadPayload: CreateThreadDto = {
+      title: 'New Thread',
+      author: 'Alice',
+      body: 'This is a new thread.',
+    };
+
+    const createdThread: ThreadResponseDto = {
+      ...threadPayload,
+      id: 'c8926730-bca5-4de5-bb86-98791cdaae0c',
+      createdAt: new Date(),
+      comments: [],
+    };
+
+    mockThreadsRepository.save.mockResolvedValue(createdThread);
+    const result = await service.createNewThread(threadPayload);
+
+    expect(mockThreadsRepository.save).toHaveBeenCalledWith(threadPayload);
+    expect(result).toEqual(createdThread);
+  });
+
+  it('deletes a thread by id', async () => {
+    const threadId = 'c8926730-bca5-4de5-bb86-98791cdaae0c';
+    mockThreadsRepository.delete.mockResolvedValue({ affected: 1 });
+
+    const res = await service.deleteThread(threadId);
+
+    expect(mockThreadsRepository.delete).toHaveBeenCalledWith(threadId);
+    expect(res).resolves.toBeUndefined();
   });
 });
