@@ -19,8 +19,8 @@ jobs:
 
       - name: Install & lint
         run: npm ci && npm run lint
-  
-    test:
+
+  test:
     runs_on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,6 +34,3 @@ jobs:
 
       - name: Install & test
         run: npm ci && npm run test
-
-
-  
