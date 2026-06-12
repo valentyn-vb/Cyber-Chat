@@ -149,4 +149,9 @@ describe('ThreadService', () => {
     expect(mockThreadsRepository.delete).toHaveBeenCalledWith(threadId);
     expect(res).resolves.toBeUndefined();
   });
+
+  it('assosiate a comment with a thread', async () => {
+    const threadId = 'c8926730-bca5-4de5-bb86-98791cdaae0c';
+    const commentId = '7d6b8c29-0f4d-4c6e-8e2d-4a1f7d9a1234';
+  });
 });
