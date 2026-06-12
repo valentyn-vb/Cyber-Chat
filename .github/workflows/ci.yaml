@@ -1,0 +1,39 @@
+name: Cyber chat CI
+on:
+  push:
+    paths-ignore: ['**.md', 'docs/**']
+  pull-request:
+    branches: [main]
+jobs:
+  lint:
+    runs_on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26
+          cache: 'npm'
+
+      - name: Install & lint
+        run: npm ci && npm run lint
+  
+    test:
+    runs_on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26
+          cache: 'npm'
+
+      - name: Install & test
+        run: npm ci && npm run test
+
+
+  
