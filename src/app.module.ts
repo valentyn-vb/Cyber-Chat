@@ -20,13 +20,14 @@ import { UsersModule } from './users/users.module';
     ThreadsModule,
     CommentsModule,
     TypeOrmModule.forRoot({
-      type: 'better-sqlite3',
-      database: '../db/chat.sqlite',
+      type: 'postgres',
       entities: [Thread, Comment, User],
-      synchronize: true,
+      synchronize: true, // Set to false in production  !!!
       logging: true,
-      enableWAL: true,
-      statementCacheSize: 100,
+      url: process.env.DB_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     UsersModule,
     AuthModule,
