@@ -2,8 +2,9 @@ name: Cyber chat CI
 on:
   push:
     paths-ignore: ['**.md', 'docs/**']
-  pull-request:
+  pull_request:
     branches: [main]
+
 jobs:
   lint:
     runs_on: ubuntu-latest
