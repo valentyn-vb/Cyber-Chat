@@ -1,2 +1,48 @@
+# Dependencies & build output (rebuilt inside the image)
+node_modules
+dist
+build
+coverage
+.nyc_output
 
-/node_modules
+# Git & CI
+.git
+.github
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Tests
+test
+**/*.spec.ts
+**/*.e2e-spec.ts
+vitest.config.ts
+vitest.config.e2e.ts
+
+# Docs
+README.md
+docs
+
+# IDE & OS
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Logs & temp
+logs
+*.log
+npm-debug.log*
+.temp
+.tmp
+
+# Lint/format (not needed for nest build)
+eslint.config.mjs
+.prettierrc
+
+# Docker metadata
+Dockerfile
+.dockerignore
