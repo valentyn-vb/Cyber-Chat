@@ -1,9 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { describe } from 'node:test';
-import * as request from 'supertest';
-import { beforeAll, it, vi } from 'vitest';
+import { Server } from 'http';
+import request from 'supertest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { CommentsService } from '../comments/comments.service';
 import { Thread } from './entities/thread.entity';
 import { ThreadsController } from './threads.controller';
 import { ThreadsService } from './threads.service';
@@ -31,30 +32,59 @@ const threadResponse = {
 };
 
 const mockThreadsRepository = {
-  findAndCount: vi.fn().mockResolvedValue([threadResponse]),
+  findAndCount: vi.fn(),
   findOne: vi.fn(),
   save: vi.fn(),
   delete: vi.fn(),
 };
 
-void describe('Thread controller (integration)', () => {
+const mockCommentsService = {
+  createNewComment: vi.fn(),
+};
+
+type ThreadsListResponse = {
+  data: typeof threadResponse[];
+  meta: {
+    totalItems: number;
+  };
+};
+
+describe('Thread controller (integration)', () => {
   let app: INestApplication;
+
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       controllers: [ThreadsController],
       providers: [
         ThreadsService,
         {
+          provide: CommentsService,
+          useValue: mockCommentsService,
+        },
+        {
           provide: getRepositoryToken(Thread),
           useValue: mockThreadsRepository,
         },
       ],
     }).compile();
+
     app = module.createNestApplication();
     await app.init();
   });
 
-  it('GET / threads retrieves an array of threads successfully', () => {
-    return request(app.getHttpServer()).get('/threads').expect(200).expect;
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('GET /threads retrieves an array of threads successfully', async () => {
+    mockThreadsRepository.findAndCount.mockResolvedValue([[threadResponse], 1]);
+
+    const response = await request(app.getHttpServer() as Server)
+      .get('/threads')
+      .expect(200);
+
+    const body = response.body as ThreadsListResponse;
+    expect(body.data).toHaveLength(1);
+    expect(body.meta.totalItems).toBe(1);
   });
 });
