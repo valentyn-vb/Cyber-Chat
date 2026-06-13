@@ -29,7 +29,7 @@ jobs:
         uses: docker/login-action@v4
         with:
           username: ${{ secret.DOCKER_USERNAME }}
-          password: ${{ secret.DOCKER_PASSWORD }}
+          password: ${{ secret.DOCKERHUB_TOKEN }}
 
       - name: Build and push docker image
         uses: docker/build-push-action@v7
@@ -37,6 +37,6 @@ jobs:
           context: .
           push: true
           platform: linux/amd64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cyber-chat:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/cyber-chat:latest
 
       - run: curl -fsSL -X GET "${{secrets.RENDER_DEPLOY_HOOK_URL }}"
