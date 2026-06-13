@@ -1,0 +1,15 @@
+services:
+  cyber-chat:
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  db:
+    volumes:
+      - dev_db_pg:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_USER: ${{  }}
+      POSTGRES_DB: scoreboard_dev
+
+  volumes: dev_db_pg
