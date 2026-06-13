@@ -22,7 +22,7 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       entities: [Thread, Comment, User],
-      synchronize: true, // Set to false in production  !!!
+      synchronize: process.env.DB_SYNCHRONIZE === 'true',
       logging: true,
       url: process.env.DB_URL,
       ssl: {
