@@ -36,8 +36,9 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
+          file: Dockerfile
           push: true
-          platform: linux/amd64
+          platforms: linux/amd64
           tags: ${{ secrets.DOCKER_USERNAME }}/cyber-chat:latest
 
       - name: Trigger Render deploy

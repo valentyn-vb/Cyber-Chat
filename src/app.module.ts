@@ -25,9 +25,9 @@ import { UsersModule } from './users/users.module';
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
       logging: true,
       url: process.env.DB_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ...(process.env.NODE_ENV === 'development'
+        ? {}
+        : { ssl: { rejectUnauthorized: false } }),
     }),
     UsersModule,
     AuthModule,

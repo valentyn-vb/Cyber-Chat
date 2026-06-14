@@ -21,7 +21,11 @@
     "typeorm": "ts-node ./node_modules/typeorm/cli.js -d ./src/data-source.ts",
     "migration:generate": "npm run typeorm -- migration:generate",
     "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm -- migration:revert"
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "docker:dev": "docker compose -f compose.dev.yaml up --build",
+    "docker:dev:down": "docker compose -f compose.dev.yaml down",
+    "docker:dev:logs": "docker compose -f compose.dev.yaml logs -f cyber-chat",
+    "docker:dev:reset": "docker compose -f compose.dev.yaml down -v"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
